@@ -1,8 +1,10 @@
 <html>
 <head>
-  <title>Altilunium Kramb</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
+  <title>Altilunium Kramb</title>
+  <link rel="icon" href="logo.png" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
   <style>
 .header{
 	width: 100%;
@@ -100,7 +102,7 @@ padding: 20px;
 </style>
 </head>
 <body>
-<div onclick="nya()" id="plink">Paste link</div>
+<div onclick="nya()" oncontextmenu="upup()" id="plink">Paste link</div>
 
 
 <div id="mo">
@@ -150,7 +152,43 @@ loadAll()
 
 function loadAll(){
 
-if (localStorage.getItem("bmark_gidx")) {
+if (findGetParameter("k") != null){
+    var key = findGetParameter("k")
+    console.log(key);
+    
+    var uri = "https://altilunium.my.id/b_link.php"
+    var data = new FormData()
+    data.append('key', key)
+    fetch(uri, { method: 'POST', body: data, }).then(data => {
+        data.text().then(function (result) {
+            console.log(result)
+            if (result == 'n') {
+                alert('404 not found')
+            }
+            else {
+                var byID = JSON.parse(result);
+                
+                for (var i=0; i<byID.length; i++){
+  console.log(byID[i]);
+  var id = byID[i].id
+  var text = byID[i].text
+  var host = byID[i].host
+  var favicon = byID[i].favicon
+  var title = byID[i].title
+  generateCard(id,text,host,favicon,title); 
+}
+
+
+                
+                
+            }
+        })
+    })
+    
+    
+}    
+
+else if (localStorage.getItem("bmark_gidx")) {
   gidx = localStorage.getItem("bmark_gidx")
   
   var arr = []
@@ -199,6 +237,86 @@ else {
 
 
 }
+
+
+function findGetParameter(parameterName) {
+    var result = null,
+        tmp = [];
+    location.search
+        .substr(1)
+        .split("&")
+        .forEach(function (item) {
+            tmp = item.split("=");
+            if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;
+    }
+
+
+function upup(){
+
+  if (findGetParameter("k") != null){
+    var key = findGetParameter("k")
+    console.log(key);
+    
+    
+    
+    var arr = []
+   for (var i = 0; i < localStorage.length; i++) {
+        if (localStorage.key(i).includes("bmark_")) {
+            var uri = localStorage.getItem(localStorage.key(i))
+            var id = localStorage.key(i).replace("bmark_","")
+            console.log(id)
+            if(  id != "gidx") {
+              var uuri = JSON.parse(uri)
+              var text = uuri[0];
+              var host = uuri[1];
+              var favicon = uuri[2];
+              var title = uuri[3];
+              var nyaa = {id:id, text:text,host:host,favicon:favicon,title:title}
+              arr.push(nyaa)
+              //generateCard(id,text,host,favicon,title); 
+            }
+        }
+    }
+    var byID = arr.slice(0);
+byID.sort(function(a,b) {
+    return a.id - b.id;
+});
+//console.log(byID)
+    
+var packagedThingy = JSON.stringify(byID)
+console.log(packagedThingy)
+
+var r_pw = prompt("Add password : ")
+ 
+    var uri = "https://altilunium.my.id/a_link.php"
+    var data = new FormData()
+    data.append('key', key)
+    data.append('pw', r_pw)
+    data.append('d', packagedThingy)
+    alert("Uploading..")
+    fetch(uri, { method: 'POST', body: data, }).then(data => {
+        data.text().then(function (result) {
+            console.log(result)
+            if (result == 'n1') {
+                alert('Wrong password!')
+            }
+            else {
+                alert("Upload success!");
+                window.location.href = "https://altilunium.github.io/kramb?k=" + key;
+
+            }
+        })
+  })
+
+}
+
+
+
+}
+
+
 
 
 
