@@ -15,3 +15,5 @@ https://altilunium.github.io/kramb
 * Right click (on pc)
 * Tap and hold it for 3 seconds (on mobile)
 
+### Share your link collection
+* "Right click (on pc)" or "tap and hold for 3 seconds (on mobile)" against the blue header
