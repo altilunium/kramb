@@ -1,0 +1,317 @@
+<html>
+<head>
+  <title>bmark</title>
+  <meta charset="UTF-8">
+  <style>
+.header{
+	width: 100%;
+    height: 54px;
+    position: fixed;
+    border-bottom: 1px solid #eee;
+    top: 0px;
+    left: 0px;
+    background-color: white;
+    z-index: 99;
+ }
+
+.header img{
+	width: 30px;
+    padding: 12px;
+    margin-left: 99px;
+}
+
+.timeline{
+	margin-top: 9%;
+	position: relative;
+	max-width: 50%;
+}
+
+.wrapper{
+	margin: 0 auto;
+    max-width: 1146px;
+}
+
+.quote{
+	    padding-left: 11px;
+    font-family: sans-serif;
+    line-height: 1.6;
+    font-size: calc(1em * 0.875);
+    color: #202122;
+    font-size: 0.875em;
+    border-left: 3px solid #0ea3c5;
+    margin-top: 12px;
+
+
+}
+
+body {
+	font-family: sans-serif;
+}
+
+.meta img{
+	width: 20px	;
+}
+
+.domain{
+	font-size: 13px;
+}
+.bq{
+	border: 1px solid #eee;
+	padding: 10px 29px 13px 22px;
+}
+
+.uc {
+	font-size: 19px;
+	margin-bottom: 13px;	
+    margin-top: 5px;
+
+}
+
+.uid{
+	    color: #9f9f9f;
+    font-size: 12px;
+}
+
+.apost{
+	margin-bottom: 12px;
+	position: relative;
+}
+
+#mo {
+margin-top : 72px;
+}
+
+#plink {
+padding: 20px;
+    background-color: #3e4e6f;
+    top: 0px;
+    position: absolute;
+    left: 0px;
+    margin-bottom: 30px;
+    width: 100%;
+    border-left: 37px solid #bfbab9;
+    color: white;
+    font-size: 20px;
+    font-family: sans-serif;
+}
+
+
+</style>
+</head>
+<body>
+<div onclick="nya()" id="plink">Paste link</div>
+
+
+<div id="mo">
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+</body>
+<script>
+// https://s2.googleusercontent.com/s2/favicons?domain=https://www.how7o.com
+// https://altilunium.my.id/u.php?u=https://itb.ac.id
+
+var gidx;
+
+try {
+  gidx = localStorage.getItem("bmark_gidx")
+}
+
+catch(err){
+  gidx = 1
+}
+
+loadAll()
+
+
+
+function loadAll(){
+
+if (localStorage.getItem("bmark_gidx")) {
+  gidx = localStorage.getItem("bmark_gidx")
+  
+  var arr = []
+   for (var i = 0; i < localStorage.length; i++) {
+        if (localStorage.key(i).includes("bmark_")) {
+            var uri = localStorage.getItem(localStorage.key(i))
+            var id = localStorage.key(i).replace("bmark_","")
+            console.log(id)
+            if(  id != "gidx") {
+              var uuri = JSON.parse(uri)
+              var text = uuri[0];
+              var host = uuri[1];
+              var favicon = uuri[2];
+              var title = uuri[3];
+              var nyaa = {id:id, text:text,host:host,favicon:favicon,title:title}
+              arr.push(nyaa)
+              //generateCard(id,text,host,favicon,title); 
+            }
+        }
+    }
+    var byID = arr.slice(0);
+byID.sort(function(a,b) {
+    return a.id - b.id;
+});
+console.log(byID)
+
+for (var i=0; i<byID.length; i++){
+  console.log(byID[i]);
+  var id = byID[i].id
+  var text = byID[i].text
+  var host = byID[i].host
+  var favicon = byID[i].favicon
+  var title = byID[i].title
+  generateCard(id,text,host,favicon,title); 
+}
+
+
+
+}
+else {
+  gidx = 1
+  return;
+}
+
+
+
+
+}
+
+
+
+async function generateCard(id,text,host,favicon,title){
+
+var x = document.createElement("div");
+x.classList.add("apost")
+x.innerHTML = "<div class='bq'><div class='meta'><table><tr><td><img id='fav' class='fav' ><td><td><div class='domain'></div><div class='title'></div></td></tr></table></div></div>"
+	
+x.onclick = function () {
+  window.open(text, '_blank').focus();
+}
+	
+x.oncontextmenu = function() {
+  x.remove()
+  localStorage.removeItem("bmark_"+id) 
+}
+
+x.getElementsByClassName("fav")[0].src = favicon
+	x.getElementsByClassName("domain")[0].innerHTML = host;
+	x.getElementsByClassName("title")[0].innerHTML = title;
+	
+document.getElementById("mo").prepend(x)
+
+
+}
+
+
+
+async function nya(){
+
+
+
+const text = await navigator.clipboard.readText();
+if (isValidHttpUrl(text)) {
+document.getElementById("plink").innerHTML = "Loading..."
+  var host = url_domain(text)
+  //document.getElementById("fav").src="https://s2.googleusercontent.com/s2/favicons?domain="+host;
+  //document.getElementById("nya").innerHTML = host
+  var xhr = new XMLHttpRequest();
+xhr.onreadystatechange = function() {
+    if (xhr.readyState == XMLHttpRequest.DONE) {
+       
+        //document.getElementById("title").innerHTML = xhr.responseText;
+        
+        
+        var x = document.createElement("div");
+        x.classList.add("apost")
+        x.innerHTML = "<div class='bq'><div class='meta'><table><tr><td><img id='fav' class='fav' ><td><td><div class='domain'></div><div class='title'></div></td></tr></table></div></div>"
+	
+	x.onclick = function () {
+    window.open(text, '_blank').focus();
+	}
+	
+	x.oncontextmenu = function() {
+    x.remove()
+	}
+	x.getElementsByClassName("fav")[0].src = "https://s2.googleusercontent.com/s2/favicons?domain="+host;
+	x.getElementsByClassName("domain")[0].innerHTML = host;
+	x.getElementsByClassName("title")[0].innerHTML = xhr.responseText;
+	if (xhr.responseText == "") {
+    
+    x.getElementsByClassName("title")[0].innerHTML = prompt("Enter custom title : ")
+  }
+  
+  var packaged = [text,host,"https://s2.googleusercontent.com/s2/favicons?domain="+host,x.getElementsByClassName("title")[0].innerHTML]
+  console.log(packaged)
+  var packagedJSON = JSON.stringify(packaged)
+  console.log(packagedJSON)
+	localStorage.setItem("bmark_"+gidx, packagedJSON)
+	gidx = parseInt(gidx) + 1
+	localStorage.setItem("bmark_gidx", gidx)
+	
+  document.getElementById("mo").prepend(x)
+  document.getElementById("plink").innerHTML = "Paste link"
+        
+        
+    }
+}
+xhr.open('GET', "https://altilunium.my.id/u.php?u="+text, true);
+xhr.send(null);
+  
+  
+  
+}
+
+console.log(text)
+}
+
+
+
+
+function isValidHttpUrl(string) {
+  let url;
+  
+  try {
+    url = new URL(string);
+  } catch (_) {
+    return false;  
+  }
+
+  return url.protocol === "http:" || url.protocol === "https:";
+}
+
+
+function url_domain(data) {
+  var    a      = document.createElement('a');
+         a.href = data;
+  return a.hostname;
+}
+
+
+</script>
+
+
+
+</html>
