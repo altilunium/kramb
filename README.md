@@ -12,5 +12,6 @@ https://altilunium.github.io/kramb
 2. Click "paste link"
 
 ### How to delete a link
-1. Right click
+* Right click (on pc)
+* Tap and hold it for 3 seconds (on mobile)
 
