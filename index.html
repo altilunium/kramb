@@ -254,10 +254,12 @@ function findGetParameter(parameterName) {
 
 
 function upup(){
-
-  if (findGetParameter("k") != null){
-    var key = findGetParameter("k")
-    console.log(key);
+    var key = ""
+   
+    key = prompt("Key : ")
+    if ((key == "") || (key == null)) {
+    return;
+    }
     
     
     
@@ -310,7 +312,7 @@ var r_pw = prompt("Add password : ")
         })
   })
 
-}
+
 
 
 
